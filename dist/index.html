@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Vue.js Collapsible Table</title>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'><link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="container">
+  <h2>Vue.js Collapsible Table<br /></h2>
+  <div id="app">
+    <p>Unfold all 
+      <input type="checkbox" @change="toggleExpanded($event)" />
+    </p>
+    <table>
+      <tr class="tree-menu">
+        <td class="label-wrapper"></td>
+        <td v-for="item in tree.values">
+          <div :class="tree.classesExpanded">{{ item }}</div>
+        </td>
+      </tr>
+    </table>
+    <table>
+      <tree-menu
+                  v-for="item in tree.nodes" 
+                 :nodes="item.nodes" 
+                 :depth="0" 
+                 :label="item.label" 
+                 :values="item.values"
+                 :collapsible="isShownAll"
+                 :expclass="item.classesExpanded"
+                 :colclass="item.classesCollapsed"
+      />
+    </table>
+  </div>
+</div>
+
+<script type="text/x-template" id="tree-menu">
+  <div class="tree-menu">
+    <tr :class="customClass">
+      <td class="label-wrapper" @click="toggleChildren">
+        <div :style="indent" :class="labelClasses">
+          <div :class="iconObject"></div>
+          <div>{{ label }}</div>
+        </div>
+      </td>
+      <td :class="tdWrapper" v-for="e in values">
+        <div class='flex-end'>{{e}}</div>
+      </td>
+    </tr>
+    
+    <tree-menu 
+      v-if="showChildren"
+      v-for="node in nodes" 
+      :nodes="node.nodes" 
+      :label="node.label"
+      :values="node.values"
+      :depth="depth + 1"
+      :collapsible="collapsible"
+      :expclass="node.classesExpanded"
+      :colclass="node.classesCollapsed"
+    />
+    
+    <tr 
+        v-if="depth == 0 && showChildren" 
+        class="tree-menu footer"
+    >
+      <td class="label-wrapper"> 
+        <span>Total {{ label }}</span>
+      </td>
+      <td v-for="value in values">
+        <div class="total-price">{{ value }} </div>
+      </td>
+    </tr>
+    <div v-if="depth == 0 && showChildren">
+      <br/>
+    </div>
+  </div>
+</script>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'></script><script  src="./script.js"></script>
+
+</body>
+</html>
